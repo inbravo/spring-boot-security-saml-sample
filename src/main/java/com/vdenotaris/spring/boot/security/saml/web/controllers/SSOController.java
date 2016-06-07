@@ -1,17 +1,15 @@
 /*
  * Copyright 2016 Vincenzo De Notaris
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package com.vdenotaris.spring.boot.security.saml.web.controllers;
@@ -35,40 +33,49 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/saml")
 public class SSOController {
 
-	// Logger
-	private static final Logger LOG = LoggerFactory
-			.getLogger(SSOController.class);
+  // Logger
+  private static final Logger LOG = LoggerFactory.getLogger(SSOController.class);
 
-	@Autowired
-	private MetadataManager metadata;
+  @Autowired
+  private MetadataManager metadata;
 
-	@RequestMapping(value = "/idpSelection", method = RequestMethod.GET)
-	public String idpSelection(HttpServletRequest request, Model model) {
-		if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
-			LOG.warn("The current user is already logged.");
-			return "redirect:/landing";
-		} else {
-			if (isForwarded(request)) {
-				Set<String> idps = metadata.getIDPEntityNames();
-				for (String idp : idps)
-					LOG.info("Configured Identity Provider for SSO: " + idp);
-				model.addAttribute("idps", idps);
-				return "saml/idpselection";
-			} else {
-				LOG.warn("Direct accesses to '/idpSelection' route are not allowed");
-				return "redirect:/";
-			}
-		}
-	}
+  @RequestMapping(value = "/idpSelection", method = RequestMethod.GET)
+  public String idpSelection(final HttpServletRequest request, final Model model) {
 
-	/*
-	 * Checks if an HTTP request is forwarded from servlet.
-	 */
-	private boolean isForwarded(HttpServletRequest request){
-		if (request.getAttribute("javax.servlet.forward.request_uri") == null)
-			return false;
-		else
-			return true;
-	}
+    if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
+      LOG.warn("The current user is already logged.");
+      return "redirect:/landing";
+    } else {
+
+      /* Check if it is a forward request */
+      if (isForwarded(request)) {
+
+        final Set<String> idps = metadata.getIDPEntityNames();
+
+        for (final String idp : idps) {
+          LOG.info("Configured Identity Provider for SSO: " + idp);
+        }
+
+        /* Set all IDP in model */
+        model.addAttribute("idps", idps);
+        return "saml/idpselection";
+      } else {
+        LOG.warn("Direct accesses to '/idpSelection' route are not allowed");
+        return "redirect:/";
+      }
+    }
+  }
+
+  /*
+   * Checks if an HTTP request is forwarded from servlet.
+   */
+  private boolean isForwarded(HttpServletRequest request) {
+
+    /* If forward request uri is null */
+    if (request.getAttribute("javax.servlet.forward.request_uri") == null)
+      return false;
+    else
+      return true;
+  }
 
 }

@@ -310,8 +310,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   // Filter automatically generates default SP metadata
   @Bean
   public MetadataGenerator metadataGenerator() {
+
+    /* Create meta data generator */
     final MetadataGenerator metadataGenerator = new MetadataGenerator();
-    metadataGenerator.setEntityId("com:vdenotaris:spring:sp");
+
+    /* Original was 'com:vdenotaris:spring:sp' , new is 'io:github:inbravo:sbsss' */
+    metadataGenerator.setEntityId("io:github:inbravo:sbsss");
     metadataGenerator.setExtendedMetadata(extendedMetadata());
     metadataGenerator.setIncludeDiscoveryExtension(false);
     metadataGenerator.setKeyManager(keyManager());

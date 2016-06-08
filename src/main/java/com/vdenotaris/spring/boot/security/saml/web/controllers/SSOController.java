@@ -18,6 +18,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class SSOController {
   private MetadataManager metadata;
 
   @RequestMapping(value = "/idpSelection", method = RequestMethod.GET)
-  public String idpSelection(final HttpServletRequest request, final Model model) {
+  public String idpSelection(final HttpServletRequest request, final Model model) throws MetadataProviderException {
 
     if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
       LOG.warn("The current user is already logged.");
@@ -49,6 +50,10 @@ public class SSOController {
 
       /* Check if it is a forward request */
       if (isForwarded(request)) {
+
+        LOG.info("idpSelection: metadata: " + metadata);
+        LOG.info("idpSelection: HostedSPName: " + metadata.getHostedSPName());
+        LOG.info("idpSelection: DefaultIDP: " + metadata.getDefaultIDP());
 
         final Set<String> idps = metadata.getIDPEntityNames();
 

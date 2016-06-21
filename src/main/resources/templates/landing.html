@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-<title>Landing!</title>
+<title>Tableau landing!</title>
+<!--  Load JS from your tableau server location -->
+<script type="text/javascript" src="https://online.tableau.com/javascripts/api/viz_v1.js"></script>
+
 </head>
 <body>
 	<h1>
@@ -10,5 +13,17 @@
 	<p>
 		<a th:href="@{/saml/logout}">Global Logout</a><br /> <a th:href="@{/saml/logout?local=true}">Local Logout</a>
 	</p>
+	
+	<!-- This is a must for tableau JS API -->
+	<div class="tableauPlaceholder" style="width: 1000; height: 600;">
+
+		<object class="tableauViz" width="1000" height="800" style="display: none;">
+
+			<!-- Put the name of Tableau object -->
+			<param name="name" value="Superstore/Product" />
+			<param name="tabs" value="yes" />
+			<param name="toolbar" value="yes" />
+		</object>
+	</div>
 </body>
 </html>

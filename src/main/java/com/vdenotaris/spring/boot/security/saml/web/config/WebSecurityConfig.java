@@ -84,8 +84,10 @@ import org.springframework.security.saml.websso.WebSSOProfileConsumerImpl;
 import org.springframework.security.saml.websso.WebSSOProfileECPImpl;
 import org.springframework.security.saml.websso.WebSSOProfileImpl;
 import org.springframework.security.saml.websso.WebSSOProfileOptions;
+import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -286,8 +288,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     final String idpSSOCircleMetadataURL = "https://idp.ssocircle.com/idp-meta.xml";
     final Timer backgroundTaskTimer = new Timer(true);
+
     final HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(backgroundTaskTimer, httpClient(), idpSSOCircleMetadataURL);
     httpMetadataProvider.setParserPool(parserPool());
+
     final ExtendedMetadataDelegate extendedMetadataDelegate = new ExtendedMetadataDelegate(httpMetadataProvider, extendedMetadata());
     extendedMetadataDelegate.setMetadataTrustCheck(true);
     extendedMetadataDelegate.setMetadataRequireSignature(false);
@@ -314,8 +318,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /* Create meta data generator */
     final MetadataGenerator metadataGenerator = new MetadataGenerator();
 
-    /* Original was 'com:vdenotaris:spring:sp' , new is 'io:github:inbravo:sbsss' */
-    metadataGenerator.setEntityId("io:github:inbravo:sbsss");
+    /* Entity Id: 'com:impetus:bi:tableau' */
+    metadataGenerator.setEntityId("io:github:inbravo:tableau");
     metadataGenerator.setExtendedMetadata(extendedMetadata());
     metadataGenerator.setIncludeDiscoveryExtension(false);
     metadataGenerator.setKeyManager(keyManager());
